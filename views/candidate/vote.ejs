@@ -1,0 +1,110 @@
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- If user has already voted -->
+                <% if (voted) { %>
+
+                    <div class="alert alert-info text-center" style="font-size: 18px; padding: 20px;">
+                        <strong>You have already voted.</strong><br>
+                        Thank you for participating in the election.
+                    </div>
+
+                <% } else { %>
+
+                    <div id="voteCounterBox">
+                        Total Selected: <span id="selectedCount">0</span>
+                    </div>
+
+                <!-- If user has NOT voted, show candidate list -->
+                <h4 class="card-title card_title_cus"></h4>
+
+                <form action="/wdtls/savevote" method="POST">
+                    <div class="row">
+                    
+                    <% data.forEach(dt => { %>
+                        <div class="col-md-3 mb-3">
+                            <div class="d-flex align-items-center border rounded p-3" style="gap:15px;">
+
+                                <!-- User Image -->
+                                <img src="<%= dt.profile_pic && dt.profile_pic.trim() !== '' ? '/uploads/profile_pic/' + dt.profile_pic : '/images/sample.png' %>" 
+                                    alt="User"
+                                    width="70" height="70"
+                                    style="border-radius:50%; object-fit:cover;">
+
+                                <!-- User Info -->
+                                <div style="flex:1;">
+                                    <h6 class="mb-1" style="font-size:15px; font-weight:600;">
+                                        <%= dt.user_name %>
+                                    </h6>
+
+                                    <p class="mb-1" style="font-size:13px; color:#555;">
+                                        <% if (dt.user_type == 'S') { %> Super Admin 
+                                        <% } else if (dt.user_type == 'A') { %> Admin 
+                                        <% } else if (dt.user_type == 'M') { %> RO 
+                                        <% } else if (dt.user_type == 'U') { %> ARO 
+                                        <% } else { %> Election Inspection Cell <% } %>
+                                    </p>
+                                </div>
+
+                                <!-- Checkbox -->
+                                <div>
+                                    <input type="checkbox" name="selected_users" value="<%= dt.id %>" />
+                                </div>
+
+                            </div>
+                        </div>
+                    <% }) %>
+
+                    <div class="col-md-3 mb-3">
+                        <button type="submit" class="btn btn-primary mt-3">Vote</button>
+                    </div>
+
+                    </div>
+                </form>
+
+                <% } %> <!-- END voted check -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   $(document).ready(function() {
+
+    function updateCount() {
+        let totalChecked = $("input[name='selected_users']:checked").length;
+
+        // Update the counter UI
+        $("#selectedCount").text(totalChecked);
+
+        if (totalChecked >= 10) {
+            // Disable all unchecked checkboxes
+            $("input[name='selected_users']:not(:checked)").prop("disabled", true);
+        } else {
+            // Enable all checkboxes again
+            $("input[name='selected_users']").prop("disabled", false);
+        }
+    }
+
+    // Update count whenever checkbox changes
+    $("input[name='selected_users']").on("change", updateCount);
+
+    // Form validation
+    $("form").on("submit", function (e) {
+        let totalChecked = $("input[name='selected_users']:checked").length;
+
+        if (!(totalChecked > 0 && totalChecked <= 10)) {
+            e.preventDefault();
+            alert("Please select minimum 1 and maximum 10 users. Currently selected: " + totalChecked);
+        }
+    });
+
+    // Initial count
+    updateCount();
+
+
+   });
+</script>

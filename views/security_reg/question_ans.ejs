@@ -1,0 +1,53 @@
+<style>
+  
+</style>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+              <h4 class="card-title card_title_cus">
+              </h4>
+              <form action="/wdtls/sec_registration" method="POST">
+              <div class="row">
+                 <% var i=1
+                  data.forEach(dt => { %>
+                  <div class="col-md-12 mb-3">
+                      <div class="security-box">
+                          <p class="security-question">
+                              Question <%=i%>: <%= dt.question_text %> 
+                          </p>
+
+                          <label class="label-title">Answer <%=i%>:</label>
+                          <input type="text" name="answer<%=i%>" required class="security-answer-input">
+
+                      </div>
+                  </div>
+                  <% i++; }) %>
+                
+              <div class="col-md-3 mb-3"> <button type="submit" class="btn btn-primary mt-3">Submit</button></div>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+
+    // $("form").on("submit", function(e) {
+
+    //     // Count how many checkboxes are checked
+    //     let totalChecked = $("input[name='selected_users']:checked").length;
+
+    //     if (!(totalChecked > 0 && totalChecked <= 10)) {
+    //         e.preventDefault();
+    //         alert("Please select minimum 1 and maximum 10 users. Currently selected: " + totalChecked);
+    //     }
+
+    // });
+
+});
+</script>
