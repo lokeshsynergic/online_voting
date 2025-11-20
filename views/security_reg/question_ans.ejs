@@ -7,6 +7,7 @@
         <div class="card">
             <div class="card-body">
               <h4 class="card-title card_title_cus">
+                Security Questions and Answers will be used for future password recovery(Only Alphanumeric is allowed).
               </h4>
               <form action="/wdtls/sec_registration" method="POST">
               <div class="row">
@@ -19,7 +20,7 @@
                           </p>
 
                           <label class="label-title">Answer <%=i%>:</label>
-                          <input type="text" name="answer<%=i%>" required class="security-answer-input">
+                          <input type="text" name="answer<%=i%>"  pattern="[A-Za-z0-9]+" class="security-answer-input" required>
 
                       </div>
                   </div>
@@ -35,6 +36,11 @@
 
 
 <script>
+    document.addEventListener("input", function(e) {
+    if (e.target.classList.contains("security-answer-input")) {
+        e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
+    }
+});
 $(document).ready(function() {
 
     // $("form").on("submit", function(e) {

@@ -26,29 +26,6 @@ WdtlsRouter.use((req, res, next) => {
   }
 });
 
-////     ********  Code start for User Management      *******   ///
-// WdtlsRouter.get("/candidatelist", async (req, res) => {
-//   try {
-//     const range_id = req.session.user.range_id;
-    
-//          var select = `a.*`;
-//          var table = `md_user a `;
-//          const where =`a.elec_status = 1`;
-    
-//     const userlist = await db_Select(select, table, where, null);
-
-//     const res_dt = {
-//       data: userlist.suc > 0 ? userlist.msg : "",
-//     };
-//     res.render("candidate/vote", res_dt);
-//   } catch (error) {
-
-//     console.error("Error during dashboard rendering:", error);
-
-//     res.render("candidate/faqlist");
-//   }
-// });
-
    WdtlsRouter.get("/candidatelist", async (req, res) => {
         try {
           const voter_id = req.session.user.id;
@@ -154,7 +131,8 @@ WdtlsRouter.post("/savevote", async (req, res) => {
   ////     ********  Code start for User Management      *******   ///
   WdtlsRouter.get("/sec_registration", async (req, res) => {
     try {
-         const range_id = req.session.user.range_id;
+         const user_id = req.session.user.user_id;
+
           var select = `*`;
           var table = `md_security_questions`;
           const questionlist = await db_Select(select, table, null, null);
@@ -173,6 +151,7 @@ WdtlsRouter.post("/savevote", async (req, res) => {
 
   WdtlsRouter.post("/sec_registration", async (req, res) => {
      try {
+       
         const {  answer1, answer2, answer3 } = req.body;
         const user_id = req.session.user.user_id;
         if ( !answer1 || !answer2 || !answer3) {
@@ -185,11 +164,6 @@ WdtlsRouter.post("/savevote", async (req, res) => {
         const a3 = answer3.trim().toLowerCase();
         const ans_enc_key = 10;
 
-        // Hash answers
-        // const ans1Hash = await bcrypt.hash(a1, ans_enc_key);
-        // const ans2Hash = await bcrypt.hash(a2, ans_enc_key);
-        // const ans3Hash = await bcrypt.hash(a3, ans_enc_key);
-
         const ans1Hash = encrypt(a1);
         const ans2Hash = encrypt(a2);
         const ans3Hash = encrypt(a3);
@@ -200,23 +174,26 @@ WdtlsRouter.post("/savevote", async (req, res) => {
        const values = `('${user_id}','${ans1Hash}','${ans2Hash}','${ans3Hash}','${formattedDate}')`;
 
        var result = await db_Insert(table, fields, values, null, 0);
+
+       
+      console.log('--------------------------hdsjahdahs------------------sbada');
        if(result.suc == 1){
            const fields = `security_answered=1 `;
            const values = null;
            const whr = `user_id='${user_id}'`;
            await db_Insert('md_user', fields, values, whr, 1);
        }
-       console.log(result);
-
+      // console.log(result);
+        //  req.session.user.security_answered = 1;
           const res_dt = {
               page: 1,
               success_msg : 'Security answers saved successfully',
               error_msg : ''
               
             };
-  
-    res.render("dashboard/dashboard_hosuper", res_dt);
 
+    
+      res.redirect("/dashn/dash");
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });
@@ -925,7 +902,6 @@ WdtlsRouter.post("/changepass", async (req, res) => {
 WdtlsRouter.get("/editprofile", async (req, res) => {
   var user = req.session.user;
   try {
-
     var userres = await db_Select(
       "*",
       "md_user",

@@ -762,7 +762,6 @@ h3.noti_title button.read_all {
   background-size: 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
   animation: shine 3s linear infinite;
 }
 

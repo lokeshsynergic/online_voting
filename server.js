@@ -113,7 +113,7 @@ const { validateSession } = require("./middleware/authMiddleware");
 const { checkUserInput } = require("./middleware/chekUserInputMiddleware");
 
 app.use("/login", LoginRouter);
-//app.use("/dash", validateSession,checkUserFlow,checkUserInput, DashboardRouter);
+
 app.use("/dashn", validateSession,checkUserFlow,checkUserInput, DashboardnRouter);
 
 app.use("/wdtls", validateSession, (req, res, next) => {
