@@ -55,7 +55,6 @@ app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.user = req.session.user;
-  res.locals.username = req.session.user?.user_name ; // only username
   res.locals.path = req.path;
   res.locals.message = req.session.message;
 
