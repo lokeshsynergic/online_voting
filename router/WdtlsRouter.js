@@ -126,7 +126,22 @@ WdtlsRouter.post("/savevote", async (req, res) => {
     res.status(500).send("Error saving votes.");
   }
 });
-
+ WdtlsRouter.get("/memberlist", async (req, res) => {
+  try {
+      var select = `a.id,a.user_id,a.user_name,a.user_email`;
+      var table = `md_user a`;
+      const userlist = await db_Select(select, table, null, null);
+      // Prepare data for rendering
+      const res_dt = {
+        data: userlist.suc > 0 ? userlist.msg : "",
+      };
+      res.render("user/list", res_dt);
+    } catch (error) {
+        // Log the error and send an appropriate response
+        console.error("Error during dashboard rendering:", error);
+        res.render("candidate/faqlist");
+    }
+  });
 
   ////     ********  Code start for User Management      *******   ///
   WdtlsRouter.get("/sec_registration", async (req, res) => {
@@ -199,83 +214,11 @@ WdtlsRouter.post("/savevote", async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
   });
-WdtlsRouter.get("/adddoc", async (req, res) => {
-  try {
-    // Extract range_id from session
-    const soc_id = req.query.id;
-    const range_id = req.session.user.range_id;
-    const doctyperes = await db_Select("*", "md_document", null, null);
-    // Prepare data for rendering
-    var res_dt = {
-      doctypelist: doctyperes.suc > 0 ? doctyperes.msg : "",
-    };
-    const rootDirectory = path.join(__dirname, '..', 'uploads');
-    console.log(rootDirectory);
-    // Render the view with data
-    res.render("websitedtls/doc/add_doc", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-  }
-});
 
-WdtlsRouter.get("/doclist_for_approve", async (req, res) => {
-  try {
-    // Extract range_id from session
-    const doclist = await db_Select(
-      "a.*,b.doc_type as doc_type_name",
-      "td_document_upload a,md_document b",
-      `a.doc_type = b.doc_type_id`,
-      null,
-    );
-    // Prepare data for rendering
-    const res_dt = {
-      data: doclist.suc > 0 ? doclist.msg : "",
-    };
-    res.render("websitedtls/doc/document_list_for_approve", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-    //res.status(500).send('An error occurred while loading the dashboard.');
-    res.render("websitedtls/doc/document_list");
-  }
-});
-WdtlsRouter.get("/doc_for_approve", async (req, res) => {
-  try {
-    // Extract range_id from session
-    var id = req.query.id;
-    var whr = `id=${id}`;
-    const doclist = await db_Select("*", "td_document_upload", whr, null);
-    // Prepare data for rendering
-    const res_dt = {
-      data: doclist.suc > 0 ? doclist.msg[0] : "",
-    };
-    res.render("websitedtls/doc/document_for_approve", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-    //res.status(500).send('An error occurred while loading the dashboard.');
-    res.render("websitedtls/doc/document_list");
-  }
-});
-WdtlsRouter.get("/doc_for_view", async (req, res) => {
-  try {
-    // Extract range_id from session
-    var id = req.query.id;
-    var whr = `id=${id}`;
-    const doclist = await db_Select("*", "td_document_upload", whr, null);
-    // Prepare data for rendering
-    const res_dt = {
-      data: doclist.suc > 0 ? doclist.msg[0] : "",
-    };
-    res.render("websitedtls/doc/document_for_view", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-    //res.status(500).send('An error occurred while loading the dashboard.');
-    res.render("websitedtls/doc/document_list");
-  }
-});
+
+
+
+
 WdtlsRouter.get("/deldock", async (req, res) => {
   try {
     var data = req.body;
@@ -482,41 +425,6 @@ WdtlsRouter.post("/uploaddoc", upload_pdf.single("document"), checkForMaliciousC
   }
 });
 
-WdtlsRouter.get("/announcelist", async (req, res) => {
-  try {
-    // Extract range_id from session
-    var whr = `doc_type = 3 `;
-    const doclist = await db_Select("*", "td_document_upload", whr, null);
-    // Prepare data for rendering
-    const res_dt = {
-      data: doclist.suc > 0 ? doclist.msg : "",
-    };
-    res.render("websitedtls/doc/document_list", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-    //res.status(500).send('An error occurred while loading the dashboard.');
-    res.render("websitedtls/doc/document_list");
-  }
-});
-WdtlsRouter.get("/addannouncement", async (req, res) => {
-  try {
-    // Extract range_id from session
-    const soc_id = req.query.id;
-    const range_id = req.session.user.range_id;
-    var whr = `upload_auth = 'A' `;
-    const doctyperes = await db_Select("*", "md_document", whr, null);
-    // Prepare data for rendering
-    var res_dt = {
-      doctypelist: doctyperes.suc > 0 ? doctyperes.msg : "",
-    };
-    // Render the view with data
-    res.render("websitedtls/add_doc", res_dt);
-  } catch (error) {
-    // Log the error and send an appropriate response
-    console.error("Error during dashboard rendering:", error);
-  }
-});
 
 
 
@@ -644,28 +552,6 @@ const checkForMaliciousContentforimage = (req, res, next) => {
       const doclist = await db_Select("*", "td_statistic", null, null);
       const res_dt = { datas: doclist.msg[0] };
       res.render("websitedtls/statistic", res_dt);
-    } catch (error) {
-      // Log the error and send an appropriate response
-      console.error("Error during dashboard rendering:", error);
-    }
-  });
-  WdtlsRouter.post("/update_statistic", async (req, res) => {
-    try {
-      var data = req.body;
-      var user = req.session.user;
-      var date_ob = moment();
-      // Format it as YYYY-MM-DD HH:mm:ss
-      var formattedDate = date_ob.format("YYYY-MM-DD HH:mm:ss");
-      var values = "";
-      const ip = req.clientIp;
-      var table_name = "td_statistic";
-      var fields = `title1 = '${data.title1.split("'").join("\\'")}',num1 = '${data.num1}',title2 = '${data.title2}',num2 = '${data.num2}',
-                  title3 = '${data.title3}',num3='${data.num3}',modified_by='${user.user_id}',modified_dt='${formattedDate}',
-                  modified_ip = '${ip}' `;
-      var whr = `id = '${data.id}'`;
-      var flag = 1;
-      var save_data = await db_Insert(table_name, fields, values, whr, flag);
-      res.redirect("/wdtls/statistic");
     } catch (error) {
       // Log the error and send an appropriate response
       console.error("Error during dashboard rendering:", error);
