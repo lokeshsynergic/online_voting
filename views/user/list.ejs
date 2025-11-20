@@ -20,7 +20,9 @@
                   <tr>
                     <th class="society_th_1">SL No</th>
                     <th class="society_th_6">Name</th>
+                    <th class="society_th_9">Image</th>
                     <th class="society_th_9">Mobile NO.</th>
+                    
                   </tr>
                 </thead>
                 <tbody id="item-list">
@@ -29,7 +31,13 @@
                       <tr>
                           <td><%= i++ %></td>
                           <td><%= dt.user_name %></td>
+                           <td> <img src="<%= dt.profile_pic && dt.profile_pic.trim() !== '' ? '/uploads/profile_pic/' + dt.profile_pic : '/images/sample.png' %>" 
+                                    alt="User"
+                                    width="70" height="70"
+                                    style="border-radius:50%; object-fit:cover;">
+                                  </td>
                           <td><%= dt.user_id %></td>
+                         
                       </tr>
                   <% }) %>
                 </tbody>

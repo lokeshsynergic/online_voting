@@ -71,7 +71,6 @@ async function checkUserFlow(req, res, next) {
     if (!req.session.user) return res.redirect('/login');
 
     try {
-
         const result = await db_Select("must_change_password, must_update_profile, security_answered", "md_user",`id = '${req.session.user.id}'`, null,null);
         const rows = result.msg[0];
         console.log(rows);
