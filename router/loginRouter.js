@@ -41,7 +41,7 @@ LoginRouter.get("/login", (req, res) => {
                   var save_data = await db_Insert("md_user", `session_version_id='${sessionId}'`, null, `user_id ='${data.user_id}'`, 1);
                 var logfields = `(operation_unique_id,operation_type,operation_module,operation,created_by,created_at,created_ip)`;
                 var logvalues = `('${sessionId}','L','U','Login','${data.user_id}','${formattedDate}','${ip}')`;
-                var save_log = await db_Insert("td_log", logfields, logvalues, null, 0);
+              //  var save_log = await db_Insert("td_log", logfields, logvalues, null, 0);
                 
                   res.redirect("/dashn/dash");
                 } else {
