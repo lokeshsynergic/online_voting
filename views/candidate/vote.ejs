@@ -75,7 +75,7 @@
         // Update the counter UI
         $("#selectedCount").text(totalChecked);
 
-        if (totalChecked >= 10) {
+        if (totalChecked >= 12) {
             // Disable all unchecked checkboxes
             $("input[name='selected_users']:not(:checked)").prop("disabled", true);
         } else {
@@ -91,9 +91,9 @@
     $("form").on("submit", function (e) {
         let totalChecked = $("input[name='selected_users']:checked").length;
 
-        if (!(totalChecked > 0 && totalChecked <= 10)) {
+        if (!(totalChecked > 0 && totalChecked <= 12)) {
             e.preventDefault();
-            alert("Please select minimum 1 and maximum 10 users. Currently selected: " + totalChecked);
+            alert("Please select minimum 1 and maximum 12 users. Currently selected: " + totalChecked);
         }
     });
 
